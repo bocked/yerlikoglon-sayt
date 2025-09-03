@@ -958,13 +958,10 @@ Xabar: ${message}
             showLogin();
         }
 
-        function clearMessages() {
-            document.getElementById('loginError').textContent = '';
-            document.getElementById('registerError').textContent = '';
-            document.getElementById('forgotError').textContent = '';
-            document.getElementById('forgotSuccess').textContent = '';
-            document.getElementById('verificationError').textContent = '';
-            document.getElementById('verificationSuccess').textContent = '';
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            showLogin();
         }
 
         // Drag & drop funksiyasi
