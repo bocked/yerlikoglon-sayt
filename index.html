@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xavfsiz Sayt - Kirish va Registratsiya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            min-height: 500px;
+            display: flex;
+        }
+
+        .form-container {
+            flex: 1;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .side-panel {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 28px;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"], input[type="file"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            font-size: 18px;
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
+        .strength-weak { color: #e74c3c; }
+        .strength-medium { color: #f39c12; }
+        .strength-strong { color: #27ae60; }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .link-btn {
+            background: none;
+            color: #667eea;
+            text-decoration: underline;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .verification-code {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            border: 2px solid #667eea;
+        }
+
+        .code-input {
+            width: 80px;
+            height: 60px;
+            font-size: 24px;
+            text-align: center;
+            margin: 0 5px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .code-input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .dashboard {
+            text-align: center;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .security-info {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #2d5016;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-area:hover {
+            background: #e9ecef;
+            border-color: #764ba2;
+        }
+
+        .file-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .timer {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                max-width: 400px;
+            }
+            
+            .side-panel {
+                order: -1;
+                padding: 30px 25px;
+            }
+            
+            .form-container {
+                padding: 30px 25px;
+            }
+
+            .code-input {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Kirish formasi -->
+        <div id="loginForm" class="form-container">
+            <h2>🔐 Xavfsiz Kirish</h2>
+            <form onsubmit="return handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Parol:</label>
+                    <div class="password-container">
+                        <input type="password" id="loginPassword" required>
+                        <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn" id="loginBtn">Kirish</button>
+                <button type="button" class="link-btn" onclick="showForgotPassword()">Parolni unutdingizmi?</button>
+            </form>
+            <div id="loginError" class="error-message"></div>
+        </div>
+
+        <!-- Email tasdiqlash -->
+        <div id="emailVerificationForm" class="form-container hidden">
+            <h2>📧 Email Tasdiqlash</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #666;">
+                <strong id="verificationEmail"></strong> manziliga 5 xonali tasdiqlash kodi yuborildi.
+            </p>
+            <div class="verification-code">
+                <p style="margin-bottom: 15px; color: #667eea; font-weight: bold;">Tasdiqlash kodini kiriting:</p>
+                <div style="display: flex; justify-content: center;">
+                    <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 1)" onkeydown="moveToPrev(this, event, 0)">
+                    <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 2)" onkeydown="moveToPrev(this, event, 1)">
+                    <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 3)" onkeydown="moveToPrev(this, event, 2)">
+                    <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 4)" onkeydown="moveToPrev(this, event, 3)">
+                    <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 5)" onkeydown="moveToPrev(this, event, 4)">
+                </div>
+                <div id="verificationTimer" class="timer"></div>
+            </div>
+            <button type="button" class="btn" onclick="verifyCode()">Tasdiqlash</button>
+            <button type="button" class="link-btn" onclick="resendCode()" id="resendBtn">Kodni qayta yuborish</button>
+            <div id="verificationError" class="error-message"></div>
+            <div id="verificationSuccess" class="success-message"></div>
+        </div>
+
+        <!-- Registratsiya formasi -->
+        <div id="registerForm" class="form-container hidden">
+            <h2>📝 Registratsiya</h2>
+            <form onsubmit="return handleRegister(event)">
+                <div class="form-group">
+                    <label for="registerName">To'liq ism:</label>
+                    <input type="text" id="registerName" required minlength="3">
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Parol:</label>
+                    <div class="password-container">
+                        <input type="password" id="registerPassword" required minlength="8" oninput="checkPasswordStrength(this)">
+                        <span class="password-toggle" onclick="togglePassword('registerPassword')">👁️</span>
+                    </div>
+                    <div id="passwordStrength" class="password-strength"></div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Parolni tasdiqlang:</label>
+                    <div class="password-container">
+                        <input type="password" id="confirmPassword" required minlength="8">
+                        <span class="password-toggle" onclick="togglePassword('confirmPassword')">👁️</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn" id="registerBtn">Registratsiya qilish</button>
+            </form>
+            <div id="registerError" class="error-message"></div>
+        </div>
+
+        <!-- Parolni qayta tiklash formasi -->
+        <div id="forgotPasswordForm" class="form-container hidden">
+            <h2>🔄 Parolni qayta tiklash</h2>
+            <form onsubmit="return handleForgotPassword(event)">
+                <div class="form-group">
+                    <label for="forgotEmail">Email manzilingizni kiriting:</label>
+                    <input type="email" id="forgotEmail" required>
+                </div>
+                <button type="submit" class="btn" id="forgotBtn">Tasdiqlash kodini yuborish</button>
+                <button type="button" class="link-btn" onclick="showLogin()">Kirish sahifasiga qaytish</button>
+            </form>
+            <div id="forgotError" class="error-message"></div>
+            <div id="forgotSuccess" class="success-message"></div>
+        </div>
+
+        <!-- Yangi parol o'rnatish -->
+        <div id="resetPasswordForm" class="form-container hidden">
+            <h2>🔑 Yangi parol o'rnatish</h2>
+            <form onsubmit="return handleResetPassword(event)">
+                <div class="form-group">
+                    <label for="newPassword">Yangi parol:</label>
+                    <div class="password-container">
+                        <input type="password" id="newPassword" required minlength="8" oninput="checkPasswordStrength(this, 'newPasswordStrength')">
+                        <span class="password-toggle" onclick="togglePassword('newPassword')">👁️</span>
+                    </div>
+                    <div id="newPasswordStrength" class="password-strength"></div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmNewPassword">Yangi parolni tasdiqlang:</label>
+                    <div class="password-container">
+                        <input type="password" id="confirmNewPassword" required minlength="8">
+                        <span class="password-toggle" onclick="togglePassword('confirmNewPassword')">👁️</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Parolni o'rnatish</button>
+            </form>
+            <div id="resetError" class="error-message"></div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="form-container hidden">
+            <div class="dashboard">
+                <h2>🎉 Xush kelibsiz!</h2>
+                <div id="userInfo" class="user-info"></div>
+                <div class="security-info">
+                    🔒 Sizning hisobingiz to'liq himoyalangan. Barcha parollar shifrlanib saqlanadi.
+                </div>
+                
+                <h3>📁 Fayllarni yuklash</h3>
+                <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+                    <p>📁 Fayl tanlash uchun bosing yoki faylni shu yerga tashlang</p>
+                    <input type="file" id="fileInput" style="display: none" multiple onchange="handleFileUpload(event)">
+                </div>
+                
+                <div id="fileList" class="file-list"></div>
+                
+                <button type="button" class="btn" onclick="logout()" style="margin-top: 30px; background: #e74c3c;">🚪 Chiqish</button>
+            </div>
+        </div>
+
+        <!-- Yon panel -->
+        <div class="side-panel">
+            <div id="loginSide">
+                <h2>👋 Salom!</h2>
+                <p>Agar hisobingiz bo'lmasa, registratsiya qiling va bizning xavfsiz xizmatlarimizdan foydalaning.</p>
+                <button class="btn" style="background: transparent; border: 2px solid white;" onclick="showRegister()">Registratsiya</button>
+            </div>
+            
+            <div id="registerSide" class="hidden">
+                <h2>🎯 Xush kelibsiz!</h2>
+                <p>Agar hisobingiz mavjud bo'lsa, kirish tugmasini bosing va faoliyatingizni davom ettiring.</p>
+                <button class="btn" style="background: transparent; border: 2px solid white;" onclick="showLogin()">Kirish</button>
+            </div>
+
+            <div id="verificationSide" class="hidden">
+                <h2>✉️ Email Tasdiqlash</h2>
+                <p>Hisobingizni himoya qilish uchun emailingizni tasdiqlang. Bu bir martalik jarayon.</p>
+                <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    <small>Kod: tasdiq@yerlikoglon.uz dan keladi</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Kriptografiya uchun funksiyalar
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password + 'salt_key_2024');
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Ma'lumotlarni xavfsiz saqlash
+        let users = JSON.parse(localStorage.getItem('secureUsers') || '[]');
+        let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        let userFiles = JSON.parse(localStorage.getItem('userFiles') || '{}');
+        let verificationCodes = {};
+        let resetCodes = {};
+
+        // Sahifa yuklanganda tekshirish
+        window.onload = function() {
+            if (currentUser && currentUser.emailVerified) {
+                showDashboard();
+            } else if (currentUser && !currentUser.emailVerified) {
+                showEmailVerification();
+            }
+        };
+
+        // 5 xonali kod generatori
+        function generateVerificationCode() {
+            return Math.floor(10000 + Math.random() * 90000).toString();
+        }
+
+        // Email yuborish simulatori
+        function sendEmail(to, subject, message) {
+            console.log(`
+=== EMAIL YUBORILDI ===
+Kimga: ${to}
+Kimdan: tasdiq@yerlikoglon.uz
+Mavzu: ${subject}
+Xabar: ${message}
+===================
+            `);
+            
+            alert(`Email yuborildi!\n\nKimga: ${to}\nKimdan: tasdiq@yerlikoglon.uz\n\nTasdiqlash kodi:\n${message.match(/\d{5}/)?.[0] || 'Kod topilmadi'}`);
+        }
+
+        function showLogin() {
+            hideAllForms();
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('loginSide').classList.remove('hidden');
+            clearMessages();
+        }
+
+        function showRegister() {
+            hideAllForms();
+            document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('registerSide').classList.remove('hidden');
+            clearMessages();
+        }
+
+        function showEmailVerification() {
+            hideAllForms();
+            document.getElementById('emailVerificationForm').classList.remove('hidden');
+            document.getElementById('verificationSide').classList.remove('hidden');
+            document.getElementById('verificationEmail').textContent = currentUser.email;
+            
+            const code = generateVerificationCode();
+            verificationCodes[currentUser.email] = {
+                code: code,
+                expires: Date.now() + 300000
+            };
+            
+            sendEmail(
+                currentUser.email,
+                "Email tasdiqlash - yerlikoglon.uz",
+                `Hurmatli ${currentUser.name},\n\nEmailingizni tasdiqlash uchun quyidagi 5 xonali kodni kiriting:\n\n${code}\n\nBu kod 5 daqiqa davomida amal qiladi.\n\nHurmat bilan,\nyerlikoglon.uz jamoasi`
+            );
+            
+            startVerificationTimer();
+        }
+
+        function showForgotPassword() {
+            hideAllForms();
+            document.getElementById('forgotPasswordForm').classList.remove('hidden');
+            clearMessages();
+        }
+
+        function showResetPassword() {
+            hideAllForms();
+            document.getElementById('resetPasswordForm').classList.remove('hidden');
+        }
+
+        function showDashboard() {
+            hideAllForms();
+            document.getElementById('dashboard').classList.remove('hidden');
+            
+            document.getElementById('userInfo').innerHTML = `
+                <h3>👤 ${currentUser.name}</h3>
+                <p>📧 Email: ${currentUser.email} ${currentUser.emailVerified ? '✅ Tasdiqlangan' : '❌ Tasdiqlanmagan'}</p>
+                <p>📅 Registratsiya: ${new Date(currentUser.registeredAt).toLocaleDateString()}</p>
+                <p>🔐 Oxirgi kirish: ${new Date().toLocaleString()}</p>
+            `;
+            
+            displayFiles();
+        }
+
+        function hideAllForms() {
+            const forms = ['loginForm', 'registerForm', 'forgotPasswordForm', 'resetPasswordForm', 'emailVerificationForm', 'dashboard'];
+            forms.forEach(formId => document.getElementById(formId).classList.add('hidden'));
+            
+            const sides = ['loginSide', 'registerSide', 'verificationSide'];
+            sides.forEach(sideId => document.getElementById(sideId).classList.add('hidden'));
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            loginBtn.innerHTML = '<span class="loading"></span>Tekshirilmoqda...';
+            loginBtn.disabled = true;
+            
+            setTimeout(async () => {
+                const hashedPassword = await hashPassword(password);
+                const user = users.find(u => u.email === email && u.password === hashedPassword);
+                
+                if (user) {
+                    currentUser = user;
+                    currentUser.lastLogin = new Date().toISOString();
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    if (user.emailVerified) {
+                        showDashboard();
+                    } else {
+                        showEmailVerification();
+                    }
+                } else {
+                    document.getElementById('loginError').textContent = '❌ Email yoki parol noto\'g\'ri!';
+                }
+                
+                loginBtn.innerHTML = 'Kirish';
+                loginBtn.disabled = false;
+            }, 1500);
+            
+            return false;
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.toLowerCase();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const registerBtn = document.getElementById('registerBtn');
+            
+            if (name.length < 3) {
+                document.getElementById('registerError').textContent = '❌ Ism kamida 3 ta belgidan iborat bo\'lishi kerak!';
+                return false;
+            }
+            
+            if (password !== confirmPassword) {
+                document.getElementById('registerError').textContent = '❌ Parollar mos kelmaydi!';
+                return false;
+            }
+            
+            if (users.find(u => u.email === email)) {
+                document.getElementById('registerError').textContent = '❌ Bu email allaqachon ro\'yxatdan o\'tgan!';
+                return false;
+            }
+            
+            if (!isPasswordStrong(password)) {
+                document.getElementById('registerError').textContent = '❌ Parol yetarlicha kuchli emas!';
+                return false;
+            }
+            
+            registerBtn.innerHTML = '<span class="loading"></span>Ro\'yxatdan o\'tkazilmoqda...';
+            registerBtn.disabled = true;
+            
+            setTimeout(async () => {
+                const hashedPassword = await hashPassword(password);
+                
+                const newUser = {
+                    id: Date.now() + Math.random(),
+                    name: name,
+                    email: email,
+                    password: hashedPassword,
+                    emailVerified: false,
+                    registeredAt: new Date().toISOString(),
+                    loginAttempts: 0
+                };
+                
+                users.push(newUser);
+                localStorage.setItem('secureUsers', JSON.stringify(users));
+                
+                currentUser = newUser;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                showEmailVerification();
+                
+                registerBtn.innerHTML = 'Registratsiya qilish';
+                registerBtn.disabled = false;
+            }, 1500);
+            
+            return false;
+        }
+
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('forgotEmail').value.toLowerCase();
+            const user = users.find(u => u.email === email);
+            const forgotBtn = document.getElementById('forgotBtn');
+            
+            forgotBtn.innerHTML = '<span class="loading"></span>Yuborilmoqda...';
+            forgotBtn.disabled = true;
+            
+            setTimeout(() => {
+                if (user) {
+                    const code = generateVerificationCode();
+                    resetCodes[email] = {
+                        code: code,
+                        expires: Date.now() + 600000,
+                        userId: user.id
+                    };
+                    
+                    sendEmail(
+                        email,
+                        "Parolni qayta tiklash - yerlikoglon.uz",
+                        `Hurmatli foydalanuvchi,\n\nParolingizni qayta tiklash uchun quyidagi 5 xonali kodni kiriting:\n\n${code}\n\nBu kod 10 daqiqa davomida amal qiladi.\n\nHurmat bilan,\nyerlikoglon.uz jamoasi`
+                    );
+                    
+                    document.getElementById('forgotSuccess').textContent = '✅ Tasdiqlash kodi emailingizga yuborildi!';
+                    document.getElementById('forgotError').textContent = '';
+                    
+                    setTimeout(() => {
+                        currentUser = { email: email, tempReset: true };
+                        showEmailVerification();
+                    }, 2000);
+                } else {
+                    document.getElementById('forgotError').textContent = '❌ Bu email ro\'yxatdan o\'tmagan!';
+                    document.getElementById('forgotSuccess').textContent = '';
+                }
+                
+                forgotBtn.innerHTML = 'Tasdiqlash kodini yuborish';
+                forgotBtn.disabled = false;
+            }, 1500);
+            
+            return false;
+        }
+
+        function verifyCode() {
+            const codeInputs = document.querySelectorAll('.code-input');
+            const enteredCode = Array.from(codeInputs).map(input => input.value).join('');
+            
+            if (enteredCode.length !== 5) {
+                document.getElementById('verificationError').textContent = '❌ 5 xonali kodni to\'liq kiriting!';
+                return;
+            }
+            
+            const email = currentUser.email;
+            
+            if (currentUser.tempReset && resetCodes[email]) {
+                const resetData = resetCodes[email];
+                
+                if (Date.now() > resetData.expires) {
+                    document.getElementById('verificationError').textContent = '❌ Kod muddati tugagan!';
+                    return;
+                }
+                
+                if (enteredCode === resetData.code) {
+                    currentUser = users.find(u => u.id === resetData.userId);
+                    delete resetCodes[email];
+                    showResetPassword();
+                } else {
+                    document.getElementById('verificationError').textContent = '❌ Noto\'g\'ri kod!';
+                }
+            } else if (verificationCodes[email]) {
+                const verificationData = verificationCodes[email];
+                
+                if (Date.now() > verificationData.expires) {
+                    document.getElementById('verificationError').textContent = '❌ Kod muddati tugagan!';
+                    return;
+                }
+                
+                if (enteredCode === verificationData.code) {
+                    currentUser.emailVerified = true;
+                    const userIndex = users.findIndex(u => u.id === currentUser.id);
+                    if (userIndex !== -1) {
+                        users[userIndex] = currentUser;
+                        localStorage.setItem('secureUsers', JSON.stringify(users));
+                    }
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    delete verificationCodes[email];
+                    showDashboard();
+                } else {
+                    document.getElementById('verificationError').textContent = '❌ Noto\'g\'ri kod!';
+                }
+            }
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const toggle = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggle.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        }
+
+        function checkPasswordStrength(input, strengthId = 'passwordStrength') {
+            const password = input.value;
+            const strengthDiv = document.getElementById(strengthId);
+            
+            let strength = 0;
+            let message = '';
+            
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            if (strength < 3) {
+                strengthDiv.className = 'password-strength strength-weak';
+                message = '❌ Zaif parol';
+            } else if (strength < 4) {
+                strengthDiv.className = 'password-strength strength-medium';
+                message = '⚠️ O\'rta parol';
+            } else {
+                strengthDiv.className = 'password-strength strength-strong';
+                message = '✅ Kuchli parol';
+            }
+            
+            strengthDiv.textContent = message;
+        }
+
+        function isPasswordStrong(password) {
+            return password.length >= 8 && 
+                   /[A-Z]/.test(password) && 
+                   /[a-z]/.test(password) && 
+                   /[0-9]/.test(password);
+        }
+
+        function moveToNext(current, nextIndex) {
+            if (current.value.length === 1 && nextIndex <= 5) {
+                const nextInput = document.querySelectorAll('.code-input')[nextIndex];
+                if (nextInput) nextInput.focus();
+            }
+        }
+
+        function moveToPrev(current, event, prevIndex) {
+            if (event.key === 'Backspace' && current.value === '' && prevIndex >= 0) {
+                const prevInput = document.querySelectorAll('.code-input')[prevIndex];
+                if (prevInput) prevInput.focus();
+            }
+        }
+
+        function startVerificationTimer() {
+            let timeLeft = 300; // 5 daqiqa
+            const timerDiv = document.getElementById('verificationTimer');
+            
+            const timer = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDiv.textContent = `Kod ${minutes}:${seconds.toString().padStart(2, '0')} da tugaydi`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    timerDiv.textContent = 'Kod muddati tugadi';
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        function resendCode() {
+            const email = currentUser.email;
+            const code = generateVerificationCode();
+            
+            verificationCodes[email] = {
+                code: code,
+                expires: Date.now() + 300000
+            };
+            
+            sendEmail(
+                email,
+                "Yangi tasdiqlash kodi - yerlikoglon.uz",
+                `Yangi tasdiqlash kodi: ${code}\n\nBu kod 5 daqiqa davomida amal qiladi.`
+            );
+            
+            document.getElementById('verificationSuccess').textContent = '✅ Yangi kod yuborildi!';
+            startVerificationTimer();
+            
+            // Kod inputlarini tozalash
+            document.querySelectorAll('.code-input').forEach(input => input.value = '');
+        }
+
+        async function handleResetPassword(event) {
+            event.preventDefault();
+            
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            
+            if (newPassword !== confirmNewPassword) {
+                document.getElementById('resetError').textContent = '❌ Parollar mos kelmaydi!';
+                return false;
+            }
+            
+            if (!isPasswordStrong(newPassword)) {
+                document.getElementById('resetError').textContent = '❌ Parol yetarlicha kuchli emas!';
+                return false;
+            }
+            
+            const hashedPassword = await hashPassword(newPassword);
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            
+            if (userIndex !== -1) {
+                users[userIndex].password = hashedPassword;
+                localStorage.setItem('secureUsers', JSON.stringify(users));
+                
+                alert('✅ Parol muvaffaqiyatli o\'zgartirildi!');
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                showLogin();
+            }
+            
+            return false;
+        }
+
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            
+            if (!userFiles[currentUser.id]) {
+                userFiles[currentUser.id] = [];
+            }
+            
+            for (let file of files) {
+                const fileData = {
+                    id: Date.now() + Math.random(),
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    uploadedAt: new Date().toISOString()
+                };
+                
+                userFiles[currentUser.id].push(fileData);
+            }
+            
+            localStorage.setItem('userFiles', JSON.stringify(userFiles));
+            displayFiles();
+            
+            event.target.value = '';
+        }
+
+        function displayFiles() {
+            const fileListContainer = document.getElementById('fileList');
+            const files = userFiles[currentUser.id] || [];
+            
+            if (files.length === 0) {
+                fileListContainer.innerHTML = '<p>Hozircha fayllar yuklanmagan.</p>';
+                return;
+            }
+            
+            fileListContainer.innerHTML = files.map(file => `
+                <div class="file-item">
+                    <div>
+                        <strong>${file.name}</strong><br>
+                        <small>${formatFileSize(file.size)} - ${new Date(file.uploadedAt).toLocaleString()}</small>
+                    </div>
+                    <button class="delete-btn" onclick="deleteFile('${file.id}')">O'chirish</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteFile(fileId) {
+            if (confirm('Faylni o\'chirish rostdan ham xohlaysizmi?')) {
+                userFiles[currentUser.id] = userFiles[currentUser.id].filter(f => f.id != fileId);
+                localStorage.setItem('userFiles', JSON.stringify(userFiles));
+                displayFiles();
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            showLogin();
+        }
+
+        function clearMessages() {
+            document.getElementById('loginError').textContent = '';
+            document.getElementById('registerError').textContent = '';
+            document.getElementById('forgotError').textContent = '';
+            document.getElementById('forgotSuccess').textContent = '';
+            document.getElementById('verificationError').textContent = '';
+            document.getElementById('verificationSuccess').textContent = '';
+        }
+
+        // Drag & drop funksiyasi
+        const fileUploadArea = document.querySelector('.file-upload-area');
+        
+        if (fileUploadArea) {
+            fileUploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadArea.style.background = '#e9ecef';
+            });
+            
+            fileUploadArea.addEventListener('dragleave', () => {
+                fileUploadArea.style.background = '#f8f9fa';
+            });
+            
+            fileUploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadArea.style.background = '#f8f9fa';
+                
+                const files = e.dataTransfer.files;
+                const fileInput = document.getElementById('fileInput');
+                fileInput.files = files;
+                
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+            });
+        }
+    </script>
+</body>
+</html>
